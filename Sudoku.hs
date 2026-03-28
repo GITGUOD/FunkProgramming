@@ -6,3 +6,6 @@ containsElem _ [] = False
 containsElem elem (x:xs)
     | elem == x = True
     | otherwise = containsElem elem xs
+
+cross :: [a] -> [a] -> [[a]]
+cross xs ys = [[x, y] | x <- xs, y <- ys]

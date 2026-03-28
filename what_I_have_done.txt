@@ -65,3 +65,23 @@ nations of the elements in the input lists.
 Example:
     [1,2,3] [4,5] = [[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]]
         Vector multiplication?
+
+Avslutning av denna delen hur husk funkar.
+Du deklarera en metod som du kan använda i terminalen. Exemplet ovan hade inte funkat,
+alltså att vi skrev in cross [1,2,3] [4,5] om inte det vore för Sudoku.hs koden rad 10 och 11.
+
+Förklaring av:
+cross xs ys = [[x, y] | x <- xs, y <- ys]
+    xs and ys
+        These are the two input lists.
+            xs = [1,2,3]
+            ys = [4,5]
+    x <- xs
+        This means: “take each element x from the list xs one by one.”
+            y <- ys
+    For each x, take each element y from ys. So this creates all combinations of x with y.
+        [x, y]
+    For each combination of x and y, put them into a list of length 2.
+        Putting it together: [[x, y] | x <- xs, y <- ys]
+            This reads like:
+                “Make a list of [x, y] for each x from xs and each y from ys.”
