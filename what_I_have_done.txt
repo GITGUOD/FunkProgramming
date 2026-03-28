@@ -1,0 +1,67 @@
+Laddat ner Haskell och GHCup:
+- Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; try { & ([ScriptBlock]::Create((Invoke-WebRequest https://www.haskell.org/ghcup/sh/bootstrap-haskell.ps1 -UseBasicParsing))) -Interactive -DisableCurl } catch { Write-Error $_ }
+- ghcup --version  funkar
+
+Steg 2:
+- ghci för att få hjälp
+- Tester:
+Listoperations
+    1 : [1,2,3]
+    (:) 1 [1,2,3]
+    ['a','b'] ++ ['c','d']
+Map function
+    map (2+) [1, 2, 3, 4]
+Type queries
+    :t map
+    :t (:)
+    :t (++)
+    :t map (2+)
+map :: (a -> b) -> [a] -> [b] → map takes a function (a -> b) and a list [a], and returns [b].
+(++) :: [a] -> [a] -> [a] → concatenates two lists of the same type.¨
+(:) :: a -> [a] -> [a]
+(2+) is a function that adds 2, so map (2+) is a function [Num b] -> [b].
+    
+Discuss what the type means, look above.
+
+Steg 3:
+    :load Sudoku
+
+Response:¨
+    [1 of 1] Compiling Sudoku           ( Sudoku.hs, interpreted )
+    Ok, one module loaded
+
+Try running:
+    containsElem 1 [1,2,3]
+    Response: True
+
+    containsElem 'a' "cde"
+    Response: False
+
+Reasoning: ContainsElem checks whether the variable is in a specific object,
+above is an array, check whether 1 is in that array. Same goes with 'a' in the string cde.
+
+Other examples:
+    containsElem 5 [1,2,3,4,5]       -- True
+    containsElem 0 [1,2,3]           -- False
+    containsElem 'x' "hello world"   -- False
+    containsElem 'o' "hello world"   -- True
+    containsElem "hi" ["hi","bye"]   -- True
+
+Discuss what the type specification means, containsElem :: Eq a =>
+a-> [a]-> Bool. What is a and Eq?
+    a is type variable
+    Eq a is the type class that supports equality, == and /=
+    a -> [a] -> Bool
+        means that we take an element of type a,
+        take a list of elements of type a
+        and returns a bool and because of the function
+        containing "containsElem" means that we check whether or not
+        the element is in that list.
+
+Task: Write a function cross :: [a]-> [a]-> [[a]] to use for the Sudoku
+which take two lists as input parameters and returns a list of lists of all combi
+nations of the elements in the input lists.
+
+Example:
+    [1,2,3] [4,5] = [[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]]
+        Vector multiplication?
