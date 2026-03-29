@@ -120,3 +120,92 @@ Task 3:
     I Haskell “zip” tar två listor och kombinerar dem element för element till en lista av par (tuples).
 
 Assignment 2:
+    Task 1 unitList:
+        - Här måste vi räkna ut alla rows, cols och boxes för en 4x4 Sudoku
+        Räknar/bygger alla rows
+            rowUnits :: [[String]]
+            rowUnits = [[r:c:[] | c <- cols] | r <- rows]
+                Output ex: [["A1","A2","A3","A4"],["B1","B2","B3","B4"], ...]
+        
+        Räknar/bygger alla cols
+            colUnits :: [[String]]
+            colUnits = [[r:c:[] | r <- rows] | c <- cols]
+                Output ex: [["A1","B1","C1","D1"], ["A2","B2","C2","D2"], ...]
+
+        Konstruera lådorna
+            boxUnits :: [[String]]
+            boxUnits = [cross rs cs | rs <- ["AB","CD"], cs <- ["12","34"]]
+                Output ex: [["A1","A2","B1","B2"], ["A3","A4","B3","B4"], ...]
+
+            Ex på lådor:
+            #   A1 A2 | A3 A4
+                B1 B2 | B3 B4
+                -----+-----
+                C1 C2 | C3 C4
+                D1 D2 | D3 D4
+
+                Här blir box units:
+
+                Top-left box: ["A1","A2","B1","B2"]
+                Top-right box: ["A3","A4","B3","B4"]
+                Bottom-left box: ["C1","C2","D1","D2"]
+                Bottom-right box: ["C3","C4","D3","D4"]
+
+        Kombinera alla de tre så att vi har en sudoku 2x2 matris i vårt fall:
+            unitList :: [[String]]
+            unitList = rowUnits ++ colUnits ++ boxUnits
+
+    Task 2: filterUnitList
+        - Vi vill filtrera ut elementen
+            filterUnitList :: String -> [[String]]
+            filterUnitList square = [unit | unit <- unitList, containsElem square unit]
+                containsElem` checks if the square is in the unit
+
+    Task 3: Calculate the value units which is a list of tuples where each tuple is a
+    square string together with its corresponding three units, [(String, [[String]])].
+    Hint: use the filterUnitList function.
+
+        For each square, pair it with its three units:
+            units :: [(String, [[String]])]
+            units = [(sq, filterUnitList sq) | sq <- crossSquare rows cols]
+        Ex:
+        ("A1", [["A1","A2","A3","A4"], ["A1","B1","C1","D1"], ["A1","A2","B1","B2"]])
+        
+        Det vill säga, vi väljer en specifik kol eller rad som vi vill upprepa i varje sådan låda eller square.
+
+    Task 4: Write function foldList :: [[a]]-> [a] which takes a list of
+    lists and concatenates all sublists into a single list.
+
+        Concatenate a list of lists into a single list:
+
+        foldList :: [[a]] -> [a]
+        foldList = concat
+        Ex på input: foldList [["A","B"],["C","D"]]  -- Output: ["A","B","C","D"]
+
+
+    Task 5: Write function removeDuplicates which takes a list and removes
+    all duplicates from that list.
+
+        removeDuplicates :: Eq a => [a] -> [a]
+            - Eq a betyder att typen a måste kunna jämföras med == och /= (t.ex. Int, Char, String).
+        removeDuplicates [] = []
+            - Om listan är tom, finns det inga element, så resultatet är också tomt.
+        removeDuplicates (first:last)
+            | first `elem` last = removeDuplicates last
+            | otherwise   = first : removeDuplicates last
+
+        -- Input: removeDuplicates [1,2,3,2,1]
+        -- Output: [3,2,1]
+
+    Task 6: Vi vill beräkna peers för varje ruta på Sudoku-brädet. Peers är alla rutor som delar rad, kolumn eller box med rutan, utom rutan själv.
+
+        peers :: [(String, [String])]
+        peers = [(sq, removeDuplicates (filter (/= sq) (foldList (filterUnitList sq)))) | sq <- crossSquare rows cols]
+
+        * filterUnitList sq → three units of `sq`
+        * foldList → flatten into one list
+        * filter (/= sq) → remove the square itself
+        * removeDuplicates → remove repeated squares
+
+        Ex input `"A1"`:
+            Output: ("A1", ["A2","A3","A4","B1","C1","D1","B2"])
