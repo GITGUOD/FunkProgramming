@@ -85,3 +85,38 @@ cross xs ys = [[x, y] | x <- xs, y <- ys]
         Putting it together: [[x, y] | x <- xs, y <- ys]
             This reads like:
                 “Make a list of [x, y] for each x from xs and each y from ys.”
+
+Assignment 1:
+Task 1:
+    - Skriva en funk: replacePointsWithZeros
+        replacePointsWithZeros :: String -> String
+            Deklarera metoden replacePointsWithZero som tar in en String och slänger ut en String
+        replacePointsWithZeros = map (\char -> if char == '.' then '0' else char)
+            Om char är en . så byter vi ut den mot en nolla, annars behåll char.
+Test: Cmd: replacePointsWithZeros ".1..2..3...4...."
+Output: "0100200300040000"
+
+Task 2:
+    Skriva en funktion som parar ihop 2 vektorer, rows och cols
+        - Visste ej hur jag skulle tolka uppgiften men vi har två sätt under, vektor och matris form
+            crossSquare :: String -> String -> [String]
+            crossSquare rows cols = [[row, col] | row <- rows, col <- cols]
+
+            matrix :: [[String]]
+            matrix = [[ [r,c] | c <- cols ] | r <- rows]
+
+Task 3:
+    Skriva en funktiom som tar in:
+    import Data.Char (digitToInt)
+        - [(String, Int)] som data struktur
+        parseBoard :: String -> [(String, Int)]
+        parseBoard input = zip (crossSquare rows cols) (map digitToInt (replacePointsWithZeros input))
+
+            Så när vi skriver: parseBoard ".1..2..3...4...."
+            så får iv outputen: [("A1",0),("A2",1),("A3",0),("A4",0),("B1",2),("B2",0),("B3",0),("B4",3),("C1",0),("C2",0),("C3",0),("C4",4),("D1",0),("D2",0),("D3",0),("D4",0)]
+            För varje punkt, blir det en nolla och eftersom våra funktion har "crossSquare rows cols" så gör den rows och cols automatiskt då vi redanh ar deklarerat det innan.
+            Våra siffror eller strings bara klassar våran [col/row] till inparametern.
+
+    I Haskell “zip” tar två listor och kombinerar dem element för element till en lista av par (tuples).
+
+Assignment 2:
